@@ -25,6 +25,7 @@ import sleeper.core.properties.table.TableProperties;
 
 import static sleeper.core.properties.instance.CdkDefinedInstanceProperty.REGION;
 import static sleeper.core.properties.instance.CommonProperty.MAXIMUM_CONNECTIONS_TO_S3;
+import static sleeper.core.properties.instance.CommonProperty.S3_READAHEAD_RANGE;
 import static sleeper.core.properties.instance.CommonProperty.S3_UPLOAD_BLOCK_SIZE;
 import static sleeper.core.properties.instance.QueryProperty.MAXIMUM_CONNECTIONS_TO_S3_FOR_QUERIES;
 import static sleeper.core.properties.table.TableProperty.S3A_READAHEAD_RANGE;
@@ -81,6 +82,10 @@ public class HadoopConfigurationProvider {
         Configuration conf = new Configuration();
         conf.set("fs.s3a.connection.maximum", instanceProperties.get(MAXIMUM_CONNECTIONS_TO_S3));
         conf.set("fs.s3a.block.size", instanceProperties.get(S3_UPLOAD_BLOCK_SIZE));
+        String readaheadRange = instanceProperties.get(S3_READAHEAD_RANGE);
+        if (readaheadRange != null) {
+            conf.set("fs.s3a.readahead.range", readaheadRange);
+        }
         conf.set("fs.s3a.bucket.probe", "0");
         conf.set("fs.s3a.fast.upload", "true");
         if (System.getenv("AWS_ENDPOINT_URL") != null) {

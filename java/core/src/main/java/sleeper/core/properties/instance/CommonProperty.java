@@ -197,6 +197,13 @@ public interface CommonProperty {
             .defaultValue("100")
             .validationPredicate(SleeperPropertyValueUtils::isPositiveInteger)
             .propertyGroup(InstancePropertyGroup.COMMON).build();
+    UserDefinedInstanceProperty S3_READAHEAD_RANGE = Index.propertyBuilder("sleeper.fs.s3a.readahead.range")
+            .description("Used to set fs.s3a.readahead.range for Hadoop readers in standard ingest and Java compaction tasks. " +
+                    "The value is a nonnegative byte count, optionally followed by a binary unit suffix (K, M, G, T, P or E), " +
+                    "for example 32M. If unset, the Hadoop default is retained. " +
+                    "This does not configure query readers or DataFusion compactions.")
+            .validationPredicate(value -> value == null || SleeperPropertyValueUtils.isValidHadoopLongBytes(value))
+            .propertyGroup(InstancePropertyGroup.COMMON).build();
     UserDefinedInstanceProperty S3_UPLOAD_BLOCK_SIZE = Index.propertyBuilder("sleeper.fs.s3a.upload.block.size")
             .description("Used to set the value of fs.s3a.block.size on the Hadoop configuration. Uploads to S3 " +
                     "happen in blocks, and this sets the size of blocks. If a larger value is used, then more data " +
